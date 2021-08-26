@@ -1,0 +1,17 @@
+
+{% if latest_assignment_list %}
+  <ul>
+  {% for assignment in latest_assignment_list %}
+    <li><a href="{% url 'assignments:edit' assignment.id %}">{{ assignment.title }}</a></li>
+  {% endfor %}
+{% else %}
+  <p>No assignments are available</p>
+{% endif %}
+
+<form action="{% url 'assignments:create' %}" method="post">
+{% csrf_token %}
+<fieldset>
+  <legend><h1> Create assignment </h1></legend> 
+  <input type="text" name="title">
+  <input type="submit" value="create">
+</fieldset>

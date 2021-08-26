@@ -1,24 +1,8 @@
 from django.forms import ModelForm
 
-from .models import Assignment, Question, QuestionComponent, Answer
+from .models import AssignmentTemplate
 
-class AssignmentForm(ModelForm):
+class AssignmentTemplateForm(ModelForm):
     class Meta:
-        fields = ["title"]
-        model = Assignment
-
-class QuestionForm(ModelForm):
-    class Meta:
-        fields = []
-        model = Question
-
-class QuestionComponentForm(ModelForm):
-    class Meta:
-        fields = ["component_type", "text"]
-        model = QuestionComponent
-
-class AnswerForm(ModelForm):
-    class Meta:
-        fields = ["text", "is_correct"]
-        model = Answer
-
+        fields = ["schema"]
+        model = AssignmentTemplate

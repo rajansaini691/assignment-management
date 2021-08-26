@@ -1,16 +1,41 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.urls import reverse
+from django.views import generic
 
-from .forms import AssignmentForm, QuestionForm, QuestionComponentForm, AnswerForm
+from .forms import AssignmentTemplateForm
+from .models import AssignmentTemplate
 
-# TODO  Follow google docs url schema (assignment creation redirects to edit view, where
-#       user adds stuff. Associated with assignment pk)
+import json
+
 # Create your views here.
-def create_assignment(request):
-    context = {
-        'assignment_form': AssignmentForm(),
-        'question_form': QuestionForm(),
-        'question_component_form': QuestionComponentForm(),
-        'answer_form': AnswerForm()
-    }
+class IndexView(generic.ListView):
+    template_name = 'assignments/index.html'
+    context_object_name = 'latest_assignment_list'
 
-    return render(request, 'assignments/create_assignment.html', context)
+    def get_queryset(self):
+        return AssignmentTemplate.objects.order_by('-id')[:5]
+
+
+def edit_assignment(request, pk):
+    assignment = get_object_or_404(AssignmentTemplate, pk=pk)
+    context = {
+        'assignment_template_form': AssignmentTemplateForm(instance=assignment),
+    }
+    return render(request, 'assignments/edit_assignment.html', context)
+
+def save_assignment(request, pk):
+    assignment = get_object_or_404(AssignmentTemplate, pk=pk)
+    assignment.schema = json.loads(request.POST['schema'])
+    assignment.save()
+    return HttpResponseRedirect(reverse('assignments:edit', args=(assignment.id,)))
+
+
+def create_assignment(request):
+    assignment = AssignmentTemplate(title=request.POST['title'], schema={'test': 'test'})
+    assignment.save()
+    return HttpResponseRedirect(reverse('assignments:edit', args=(assignment.id,)))
+
+class AssignmentTemplateView(generic.DetailView):
+    model = AssignmentTemplate
+    template_name = 'assignments/view_template.html'

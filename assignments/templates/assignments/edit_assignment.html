@@ -1,0 +1,7 @@
+
+<form action="{% url 'assignments:save' assignment_template_form.instance.id %}" method="post">
+  {% csrf_token %}
+  <h1>{{ assignment_template_form.instance.title }}</h1>
+  {{ assignment_template_form.as_p }}
+  <input type="submit" value="save">
+</form>
