@@ -1,7 +1,25 @@
 
+<p>
+  Warning: this is an MVP, and most edge cases are not being covered. Make sure you're
+  properly following the assignment template schema.
+</p>
+
 <form action="{% url 'assignments:save' assignment_template_form.instance.id %}" method="post">
   {% csrf_token %}
   <h1>{{ assignment_template_form.instance.title }}</h1>
   {{ assignment_template_form.as_p }}
   <input type="submit" value="save">
 </form>
+
+<p>
+  Choose how many assignments you want to generate. Choosing 0 will clear all of the existing assignments. 
+</p>
+<form action="{% url 'assignments:generate' assignment_template_form.instance.id %}" method="post">
+  {% csrf_token %}
+  <input type="number" min="0" max="100" name="num_assignments">
+  <input type="submit" value="generate">
+</form>
+
+{% for assignment in assignment_template_form.instance.assignment_set.all %}
+  <p> {{assignment}} </p>
+{% endfor %}

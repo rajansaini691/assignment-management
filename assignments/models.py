@@ -11,7 +11,7 @@ class AssignmentTemplate(models.Model):
         return str(self.schema)
 
 class Assignment(models.Model):
-    template = models.ForeignKey(AssignmentTemplate, default=1, on_delete=models.CASCADE)
+    template = models.ForeignKey(AssignmentTemplate, on_delete=models.CASCADE)
     schema = models.JSONField(default=assignment_default, max_length=5000)
     
     def __str__(self):
